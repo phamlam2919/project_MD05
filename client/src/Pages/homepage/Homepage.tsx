@@ -13,7 +13,6 @@ const Homepage = () => {
             `http://localhost:8000/api/v1/products?category=1`
         );
         let dataSofa = await responseSofa.json();
-        console.log(dataSofa);
 
         setProductsSofa(dataSofa);
     };

@@ -10,6 +10,7 @@ import { ProductModule } from './modules/products/product.module';
 import { TagModule } from './modules/tag/tag.module';
 import { CategoryModule } from './modules/category/category.module';
 import { ImageModule } from './modules/imageshow/imageshow.module';
+import { OrderModule } from './modules/orders/order.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ImageModule } from './modules/imageshow/imageshow.module';
     TagModule,
     CategoryModule,
     AuthModule,
+    OrderModule,
   ],
   controllers: [],
   providers: [

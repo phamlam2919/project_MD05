@@ -35,6 +35,15 @@ interface Product {
     image_shows: ImageShow[];
 }
 const Detail = () => {
+    const email = JSON.parse(localStorage.getItem("email") as string) || "";
+    const [user_id, setUserId] = useState();
+    const getEmail = () => {
+        axios
+            .get(`http://localhost:8000/api/v1/users/email/${email}`)
+            .then((res) => setUserId(res.data.user_id))
+            .catch((err) => console.log(err));
+    };
+
     const [quantity, setQuantity] = useState(1);
     let [product, setProduct] = useState<Product>({
         name: "",
@@ -55,8 +64,6 @@ const Detail = () => {
                 `http://localhost:8000/api/v1/products/${id}`
             );
             let data = response.data;
-            console.log(data);
-
             setProduct(data);
         } catch (error) {
             console.log(error);
@@ -65,11 +72,15 @@ const Detail = () => {
 
     useEffect(() => {
         fetchProduct();
+        if (email) {
+            getEmail();
+        }
     }, []);
 
     let dispatch = useDispatch();
     const handleAddToCart = () => {
         let buyProduct = {
+            user_id: Number(user_id),
             ...product,
             clickNumber: quantity,
         };

@@ -1,28 +1,43 @@
 import { Dropdown, Space } from "antd";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { UserOutlined } from "@ant-design/icons";
 const Header = () => {
-    const cart = useSelector((state: any) => state.cart);
+    let cart = useSelector((state: any) => state.cart);
+    const email = JSON.parse(localStorage.getItem("email") as string) || "";
+    const [user_id, setUserId] = useState();
+    const token = JSON.parse(localStorage.getItem("token") as string) || "";
+    const findCart = cart.filter(
+        (item: any) => item.user_id === Number(user_id)
+    );
+    console.log(findCart);
+    const getUser = () => {
+        axios
+            .get(`http://localhost:8000/api/v1/users/email/${email}`)
+            .then((res) => {
+                setUserId(res.data.user_id);
+                setUserName(res.data.name);
+            })
+            .catch((err) => console.log(err));
+    };
     const [loggedIn, setLoggedIn] = useState(false);
     const [userName, setUserName] = useState("");
     const navigate = useNavigate();
     const dispatch = useDispatch();
     useEffect(() => {
-        const token = JSON.parse(localStorage.getItem("token") || "{}");
-        const name = JSON.parse(localStorage.getItem("name") || "{}");
         // console.log(name);
-        if (name) {
+        if (email) {
             setLoggedIn(true);
-            setUserName(name);
+            getUser();
         }
-    }, []);
+    }, [email]);
 
     const handleLogout = () => {
-        dispatch({ type: "CLEAR_CART" });
+        // dispatch({ type: "CLEAR_CART" });
         localStorage.removeItem("token");
-        localStorage.removeItem("cart");
+        localStorage.removeItem("email");
+        // localStorage.removeItem("cart");
         setLoggedIn(false);
         setUserName("");
         navigate("/login");
@@ -112,23 +127,15 @@ const Header = () => {
                                 ></path>
                             </svg>
                             <span className="absolute top-[10px] left-6">
-                                {cart.reduce(
-                                    (pre: number, cur: any) =>
-                                        (pre += cur.clickNumber),
-                                    0
-                                )}
+                                {cart.length > 0 &&
+                                    findCart.reduce(
+                                        (pre: number, cur: any) =>
+                                            (pre += cur.clickNumber),
+                                        0
+                                    )}
                             </span>
                         </div>
                     </Link>
-                    {/* <Link to="/login">
-                        <div className="cursor-pointer w-[34px] h-[34px] rounded-[34px] bg-[#B18979] text-[15px] text-center p-3">
-                            <img
-                                className="lazy"
-                                src="//bizweb.dktcdn.net/100/361/830/themes/924241/assets/profile_1.png?1699878652322"
-                                alt=""
-                            />
-                        </div>
-                    </Link> */}
                     <Dropdown menu={{ items }}>
                         <a onClick={(e) => e.preventDefault()}>
                             <Space>

@@ -7,8 +7,6 @@ interface CartItemProps {
     detail: any;
 }
 const CartItem = ({ detail }: CartItemProps) => {
-    console.log("-----------", detail);
-
     const [quantity, setQuantity] = useState<number>(1);
     const dispatch = useDispatch();
 
@@ -18,7 +16,10 @@ const CartItem = ({ detail }: CartItemProps) => {
 
     const handleIncrease = (id: number) => {
         setQuantity(quantity + 1);
-        dispatch({ type: "INCREASE_CART_PRODUCT", payload: id });
+        dispatch({
+            type: "INCREASE_CART_PRODUCT",
+            payload: { id: id, user_id: detail.user_id },
+        });
     };
 
     const handleDown = (id: number) => {
@@ -26,28 +27,11 @@ const CartItem = ({ detail }: CartItemProps) => {
             setQuantity(quantity - 1);
             dispatch({
                 type: "DECREASE_CART_PRODUCT",
-                payload: id,
+                payload: { id: id, user_id: detail.user_id },
             });
         }
     };
 
-    // const deleteCart = (id: number) => {
-    //     const cartItems = JSON.parse(localStorage.getItem("cart") as string);
-
-    //     const itemIndex = cartItems.findIndex(
-    //         (item: { _id: number }) => item._id === id
-    //     );
-
-    //     if (itemIndex !== -1) {
-    //         cartItems.splice(itemIndex, 1);
-    //         localStorage.setItem("cart", JSON.stringify(cartItems));
-    //     }
-
-    //     dispatch({
-    //         type: "DELETE_CART",
-    //         payload: cartItems,
-    //     });
-    // };
     const deleteCart = (id: number) => {
         Swal.fire({
             title: "Bạn có chắc không ?",
@@ -85,6 +69,7 @@ const CartItem = ({ detail }: CartItemProps) => {
             }
         });
     };
+    console.log(detail);
     return (
         <div>
             <div

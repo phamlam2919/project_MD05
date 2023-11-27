@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "antd";
-import { Link } from "react-router-dom";
-// import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import validator from "validator";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 // import Swal from "sweetalert2";
 // import validator from "validator";
 // import { useDispatch, useSelector } from "react-redux";
 type Props = {};
 
-const PayCheckOut = (props: Props) => {
-    // const navigate = useNavigate();
+const PayCheckOut = (props: any) => {
+    const navigate = useNavigate();
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [phone, setPhone] = useState<string>("");
     const [address, setAddress] = useState<string>("");
-    // const cart = useSelector((state: any) => state.cart);
+    const cart = props.cart;
+    console.log(cart);
     const [provinces, setProvinces] = useState<any[]>([]); // Tỉnh/Thành Phố
     const [activeProvince, setActiveProvince] = useState<string>("");
 
@@ -24,7 +28,7 @@ const PayCheckOut = (props: Props) => {
     const [activeWard, setActiveWard] = useState<string>("");
 
     const VIETNAM_BASE_API = "https://provinces.open-api.vn/api/?depth=3";
-    const BASE_API = "http://localhost:3000/api/v1";
+    const BASE_API = "http://localhost:8000/api/v1";
 
     const fetchProvinces = async () => {
         try {
@@ -87,43 +91,44 @@ const PayCheckOut = (props: Props) => {
         setWards([]);
     }
 
-    // const handleCheckout = async (e: any) => {
-    //     e.preventDefault();
-    //     const isValidEmail = validator.isEmail(email);
-    //     const isValidPhone = validator.isMobilePhone(phone, "vi-VN");
+    const handleCheckout = async (e: any) => {
+        e.preventDefault();
+        const isValidEmail = validator.isEmail(email);
+        const isValidPhone = validator.isMobilePhone(phone, "vi-VN");
 
-    //     if (!isValidEmail || !isValidPhone) {
-    //         Swal.fire("Lỗi", "Email hoặc số điện thoại không hợp lệ", "error");
-    //         return;
-    //     }
-    //     try {
-    //         let order = {
-    //             name,
-    //             email,
-    //             phone,
-    //             address,
-    //             province: activeProvince,
-    //             district: activeDistrict,
-    //             ward: activeWard,
-    //             cart,
-    //         };
-    //         let res = await fetch(BASE_API + "/orders", {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify(order),
-    //         });
-    //         let data = await res.json();
-    //         // Swal.fire("Thành Công", data.message, "success").then(() => {
-    //         //     // localStorage.setItem("order")
-    //         //     // dispatch({ type: "CLEAR_CART" });
-    //         //     navigate(`/bill?id=${data.orderId}`);
-    //         // });
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
+        if (!isValidEmail || !isValidPhone) {
+            Swal.fire("Lỗi", "Email hoặc số điện thoại không hợp lệ", "error");
+            return;
+        }
+        try {
+            let order = {
+                user_id: cart[0].user_id,
+                name,
+                email,
+                phone,
+                address,
+                province: activeProvince,
+                district: activeDistrict,
+                ward: activeWard,
+                cart,
+            };
+            let res = await fetch(BASE_API + "/orders", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(order),
+            });
+            let data = await res.json();
+            Swal.fire("Thành Công", data.message, "success").then(() => {
+                // localStorage.setItem("order")
+                // dispatch({ type: "CLEAR_CART" });
+                // navigate(`/bill?id=${data.orderId}`);
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return (
         <div className="w-[65%]">
             <div className=" pl-[153px] mt-5">
@@ -170,6 +175,15 @@ const PayCheckOut = (props: Props) => {
                             placeholder="Số điện thoại"
                             value={phone}
                             onChange={(e) => setPhone(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="mt-5">
+                        <p>Địa chỉ:</p>
+                        <Input
+                            placeholder="Địa chỉ chi tiết"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
                         />
                     </div>
                     <div className="">
@@ -292,7 +306,7 @@ const PayCheckOut = (props: Props) => {
                     </p>
 
                     <button
-                        // onClick={handleCheckout}
+                        onClick={handleCheckout}
                         style={{
                             width: "100%",
                             height: "50px",

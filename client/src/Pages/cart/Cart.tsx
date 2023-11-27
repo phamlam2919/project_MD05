@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../../Commons/header/Header";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../../Commons/footer/Footer";
@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import CartItem from "./CartItem";
 import { formatCurrency } from "../../helpers";
+import axios from "axios";
 
 interface CartItem {
     _id: number;
@@ -19,6 +20,22 @@ interface RootState {
 }
 const Cart = () => {
     const cart = useSelector((state: RootState) => state.cart);
+    const email = JSON.parse(localStorage.getItem("email") as string) || "";
+    const [user_id, setUserId] = useState();
+    const getEmail = () => {
+        axios
+            .get(`http://localhost:8000/api/v1/users/email/${email}`)
+            .then((res) => setUserId(res.data.user_id))
+            .catch((err) => console.log(err));
+    };
+    useEffect(() => {
+        if (email) {
+            getEmail();
+        }
+    }, []);
+    const findCart = cart.filter(
+        (item: any) => item.user_id === Number(user_id)
+    );
     const navigate = useNavigate();
 
     const handleCheckout = (e: React.MouseEvent) => {
@@ -80,17 +97,19 @@ const Cart = () => {
                 <div>
                     <h1 className="text-[36px] font-bold text-[#232734] mb-7">
                         Giỏ hàng (
-                        {cart.reduce(
-                            (pre: number, cur: any) => (pre += cur.clickNumber),
-                            0
-                        )}{" "}
+                        {cart.length > 0 &&
+                            findCart.reduce(
+                                (pre: number, cur: any) =>
+                                    (pre += cur.clickNumber),
+                                0
+                            )}{" "}
                         sản phẩm)
                     </h1>
                 </div>
                 <div className="flex gap-5">
                     <div className="w-[70%]">
                         {cart.length > 0 ? (
-                            cart.map((item) => (
+                            findCart.map((item) => (
                                 <CartItem key={item._id} detail={item} />
                             ))
                         ) : (
@@ -119,7 +138,7 @@ const Cart = () => {
                                 </b>
                                 <span className="text-[#B18979] text-2xl font-semibold">
                                     {formatCurrency(
-                                        cart.reduce((pre, cur) => {
+                                        findCart.reduce((pre, cur) => {
                                             return (pre +=
                                                 cur.price * cur.clickNumber);
                                         }, 0)
@@ -151,7 +170,7 @@ const Cart = () => {
                                 </b>
                                 <span className="text-[#B18979] text-2xl font-semibold">
                                     {formatCurrency(
-                                        cart.reduce((pre, cur) => {
+                                        findCart.reduce((pre, cur) => {
                                             return (pre +=
                                                 cur.price * cur.clickNumber);
                                         }, 0)
@@ -175,7 +194,10 @@ const Cart = () => {
                                 </button>
                             </div>
                         </div>
-                        <button className="w-full h-[70px] text-lg font-bold bg-[#B18979] text-[#fff] mt-5">
+                        <button
+                            onClick={handleCheckout}
+                            className="w-full h-[70px] text-lg font-bold bg-[#B18979] text-[#fff] mt-5"
+                        >
                             Thanh toán{" "}
                         </button>
                     </div>

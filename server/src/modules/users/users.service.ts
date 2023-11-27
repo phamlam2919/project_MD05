@@ -28,6 +28,20 @@ export class UsersService {
     } catch (error) {}
   }
 
+  getById = async (user_id: number) => {
+    try {
+      const user = await this.usersRepository.findOne({
+        where: {
+          user_id,
+        },
+      });
+      if (user) {
+        return user;
+      }
+    } catch (error) {
+      throw new HttpException("Can't get user", HttpStatus.BAD_REQUEST);
+    }
+  };
   // lấy user theo email
   async getByEmail(email: string) {
     try {

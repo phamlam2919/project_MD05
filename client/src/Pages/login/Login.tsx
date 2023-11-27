@@ -71,15 +71,15 @@ const Login = () => {
                                 timer: 2000,
                             }).then(() => {
                                 navigate("/");
+                                localStorage.setItem(
+                                    "email",
+                                    JSON.stringify(res.data.user.email)
+                                );
+                                localStorage.setItem(
+                                    "token",
+                                    JSON.stringify(res.data.accsets_token)
+                                );
                             });
-                            localStorage.setItem(
-                                "name",
-                                JSON.stringify(res.data.user.name)
-                            );
-                            localStorage.setItem(
-                                "token",
-                                JSON.stringify(res.data.accsets_token)
-                            );
                         }
                     } else {
                         Swal.fire({
