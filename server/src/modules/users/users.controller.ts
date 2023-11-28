@@ -8,6 +8,10 @@ import { AuthGuard } from '../../guards/auth.guard';
 export class UserController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get()
+  getAllUser(): Promise<any[]> {
+    return this.usersService.getAllUser();
+  }
   @Get('/:id')
   @Roles(Role.Admin)
   @UseGuards(AuthGuard)

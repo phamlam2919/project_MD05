@@ -16,10 +16,9 @@ let initialState: RootState = {
 // console.log("Initial State:", initialState);
 
 const store = createStore((state: RootState = initialState, action: any) => {
-    console.log("cart cu", state.cart);
+    // console.log("cart cu", state.cart);
     if (action.type === "ADD_TO_CART") {
         let cart = [...state.cart];
-        console.log(cart);
         let { payload } = action;
         let findIndex = cart.findIndex(
             (e) => e._id === payload._id && e.user_id === payload.user_id
@@ -76,12 +75,15 @@ const store = createStore((state: RootState = initialState, action: any) => {
         };
     }
 
-    // if (action.type === "CLEAR_CART") {
-    //     return {
-    //         ...state,
-    //         cart: [],
-    //     };
-    // }
+    if (action.type === "CLEAR_CART") {
+        console.log(action);
+        let payload = action.payload;
+
+        return {
+            ...state,
+            cart: [...payload],
+        };
+    }
 
     if (action.type === "DELETE_CART") {
         let { payload } = action;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Input } from "antd";
 import Swal from "sweetalert2";
 import validator from "validator";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 // import Swal from "sweetalert2";
@@ -11,13 +11,14 @@ import axios from "axios";
 type Props = {};
 
 const PayCheckOut = (props: any) => {
+    const cartAll = useSelector((state: any) => state.cart);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [phone, setPhone] = useState<string>("");
     const [address, setAddress] = useState<string>("");
     const cart = props.cart;
-    console.log(cart);
     const [provinces, setProvinces] = useState<any[]>([]); // Tỉnh/Thành Phố
     const [activeProvince, setActiveProvince] = useState<string>("");
 
@@ -120,11 +121,16 @@ const PayCheckOut = (props: any) => {
                 body: JSON.stringify(order),
             });
             let data = await res.json();
-            Swal.fire("Thành Công", data.message, "success").then(() => {
-                // localStorage.setItem("order")
-                // dispatch({ type: "CLEAR_CART" });
-                // navigate(`/bill?id=${data.orderId}`);
-            });
+            Swal.fire("Đặt Hàng Thành Công", data.message, "success").then(
+                () => {
+                    const newCart = cartAll.filter(
+                        (c: any) => c.user_id !== cart[0].user_id
+                    );
+                    localStorage.setItem("cart", JSON.stringify(newCart));
+                    dispatch({ type: "CLEAR_CART", payload: newCart });
+                    navigate("/");
+                }
+            );
         } catch (error) {
             console.log(error);
         }

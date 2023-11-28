@@ -55,7 +55,6 @@ const Login = () => {
                 .post(`http://localhost:8000/api/v1/auth/login`, newUsers)
                 .then((res: any) => {
                     console.log(res);
-
                     if (res.status === 200) {
                         if (res.data.user.role === 1) {
                             navigate("/admin");
@@ -66,7 +65,7 @@ const Login = () => {
                         } else {
                             Swal.fire({
                                 icon: "success",
-                                title: "Đăng nhập thành công",
+                                title: res.data.message,
                                 showConfirmButton: false,
                                 timer: 2000,
                             }).then(() => {
@@ -81,15 +80,15 @@ const Login = () => {
                                 );
                             });
                         }
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Đăng nhập thất bại...",
-                            text: "Tài khoản hoặc mật khẩu không chính xác",
-                        });
                     }
                 })
-                .catch((err) => console.log(err));
+                .catch((err) => {
+                    Swal.fire({
+                        icon: "error",
+                        title: err.response.data.message,
+                        text: "Tài khoản hoặc mật khẩu không chính xác",
+                    });
+                });
         }
     };
     return (

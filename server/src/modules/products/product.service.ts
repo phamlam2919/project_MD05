@@ -22,47 +22,6 @@ export class ProductService {
       relations: ['image_shows', 'category', 'tag'],
     });
   }
-  // async getAllProducts(
-  //   // categoryName: string,
-  //   page_number?: number,
-  //   limit?: number,
-  // ): Promise<Product[]> {
-  //   const queryBuilder = this.productRepositori
-  //     .createQueryBuilder('p')
-  //     .select([
-  //       'p._id',
-  //       'p.name',
-  //       'p.number',
-  //       'p.price',
-  //       'p.sale',
-  //       'c.category_id',
-  //       'c.name as description_name',
-  //       'c.description',
-  //       'c.banner',
-  //       "IFNULL(image_show.image, '') as image_show",
-  //     ])
-  //     .innerJoin('p.category', 'c', 'p.category_id = c.category_id')
-  //     .leftJoin(
-  //       (subQuery) =>
-  //         subQuery
-  //           .select('_id')
-  //           .addSelect(
-  //             'GROUP_CONCAT(image ORDER BY image_id ASC)',
-  //             'image_show',
-  //           )
-  //           .from('image_show', 'image_show')
-  //           .groupBy('_id'),
-  //       'image_show',
-  //       'p._id = image_show._id',
-  //     );
-  //   // .where('c.name = :categoryName', { categoryName });
-
-  //   if (page_number && limit) {
-  //     queryBuilder.limit(limit).offset((page_number - 1) * limit);
-  //   }
-
-  //   return await queryBuilder.getRawMany();
-  // }
 
   async getProductById(id: number): Promise<any> {
     return this.productRepositori.findOne({

@@ -9,6 +9,9 @@ export class UsersService {
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
   ) {}
 
+  async getAllUser(): Promise<any[]> {
+    return this.usersRepository.find();
+  }
   async createUserService(user: any): Promise<any> {
     try {
       return await this.usersRepository.save(user);

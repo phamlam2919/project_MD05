@@ -43,7 +43,7 @@ export class Product {
 
   @Column({
     type: 'double',
-    default: false,
+    nullable: true,
   })
   sale: string;
 

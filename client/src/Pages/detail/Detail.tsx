@@ -64,6 +64,8 @@ const Detail = () => {
                 `http://localhost:8000/api/v1/products/${id}`
             );
             let data = response.data;
+            // console.log(data);
+
             setProduct(data);
         } catch (error) {
             console.log(error);
@@ -161,6 +163,7 @@ const Detail = () => {
                                     className="ms-1 text-base font-medium text-gray-700 "
                                 >
                                     Sofa
+                                    {/* {product.category[0].description} */}
                                 </Link>
                             </div>
                         </li>

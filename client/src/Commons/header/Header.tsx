@@ -46,7 +46,11 @@ const Header = () => {
         ? [
               {
                   key: "1",
-                  label: <span>{userName}</span>,
+                  label: (
+                      <Link to="/profile">
+                          <span>{userName}</span>
+                      </Link>
+                  ),
               },
               {
                   key: "2",
@@ -81,10 +85,12 @@ const Header = () => {
                 </div>
                 <div className="">
                     <ul className="text-[#BF9F83] text-base font-bold font-['Manrope', sans-serif] flex gap-10 ">
-                        <Link to="/shop">
+                        <Link to="/shop-sofa">
                             <li className="cursor-pointer">Sofa</li>
                         </Link>
-                        <li className="cursor-pointer">Ghế</li>
+                        <Link to="/shop-chair">
+                            <li className="cursor-pointer">Ghế</li>
+                        </Link>
                         <li className="cursor-pointer">Thảm trải sàn</li>
                         <li className="cursor-pointer">Bàn</li>
                         <li className="cursor-pointer">Đèn</li>

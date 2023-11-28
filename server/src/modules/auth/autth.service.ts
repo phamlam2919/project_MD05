@@ -36,14 +36,13 @@ export class AuthService {
         throw new HttpException('Wrong password', HttpStatus.BAD_REQUEST);
       }
       const token = await this.createToken(user);
-      console.log('token', token);
       const { password, ...rest } = user;
       return {
+        message: 'Đăng nhập thành công',
         user: rest,
         accsets_token: token,
       };
     } catch (error) {
-      console.log(error);
       throw new HttpException('Wrong password', HttpStatus.BAD_REQUEST);
     }
   }

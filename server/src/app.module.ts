@@ -11,6 +11,7 @@ import { TagModule } from './modules/tag/tag.module';
 import { CategoryModule } from './modules/category/category.module';
 import { ImageModule } from './modules/imageshow/imageshow.module';
 import { OrderModule } from './modules/orders/order.module';
+import { CloudinaryModule } from './modules/cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { OrderModule } from './modules/orders/order.module';
     CategoryModule,
     AuthModule,
     OrderModule,
+    CloudinaryModule
   ],
   controllers: [],
   providers: [

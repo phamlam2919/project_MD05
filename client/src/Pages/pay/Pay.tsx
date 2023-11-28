@@ -131,7 +131,7 @@ const Pay = () => {
                                                 src={e.image_shows[0].image}
                                                 alt=""
                                             />{" "}
-                                            <span className="absolute text-white bg-[#969383] text-[10px] w-4 h-4 rounded-full text-center top-[-6px] right-0">
+                                            <span className="absolute text-white bg-[#969383] text-[10px] w-4 h-4 rounded-full text-center top-[-6px] right-[-6px]">
                                                 {e.clickNumber}
                                             </span>
                                         </div>
